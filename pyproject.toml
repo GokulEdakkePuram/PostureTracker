@@ -6,5 +6,6 @@ readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
     "mediapipe>=0.10.33",
+    "opencv-python>=4.13.0.92",
     "ruff>=0.15.11",
 ]
