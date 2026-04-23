@@ -1,21 +1,48 @@
 import cv2 
 import time
+import numpy as np
+import threading
 
 from src.PoseDetector import PoseDetector
 from src.PoseProcessor import PoseProcessor
 from src.DisplayUI import DisplayUI
 
+class PostureTracker:
+    def __init__(self):
+        self.pose_detector = PoseDetector()
+        self.display_ui = DisplayUI()
+        self.image = np.zeros((self.display_ui.height, self.display_ui.width, 3), dtype=np.uint8)
+        self.timestamp_ms = 0
+        self.frame_lock = threading.Lock()
+        self.stop_capture = threading.Event()
+    def capture_frames(self):
+        capture = cv2.VideoCapture(0)
+        while not self.stop_capture.is_set():
+            success, img = capture.read()
+            self.timestamp_ms = int(time.time() * 1000)
+            if not success:
+                break
+            with self.frame_lock:
+                self.image = img.copy()
+    def get_img(self):
+        with self.frame_lock:
+            return self.image, self.timestamp_ms
+    def close(self):
+        self.stop_capture.set()
+        self.pose_detector.close()
+        self.display_ui.close()
 def main():
-    cv2apture = cv2.VideoCapture(0)
-    pose_detector = PoseDetector()
-    display_ui = DisplayUI()
-    while True:
-        success, img = cv2apture.read()
-        timestamp_ms = int(time.time() * 1000)
-        if not success:
-            break
-
-        img, result = pose_detector.findPose(img, timestamp_ms)
+    posture_tracker = PostureTracker()
+    frame_reader_thread = threading.Thread(target=posture_tracker.capture_frames, daemon=True)
+    frame_reader_thread.start()
+    img, timestamp_ms = posture_tracker.get_img()
+    
+    while img is not None:
+        img, timestamp_ms = posture_tracker.get_img()
+        if timestamp_ms == 0:
+            print("Waiting for frames...")
+            continue
+        img, result = posture_tracker.pose_detector.findPose(img, timestamp_ms, draw=True)
         if result.pose_landmarks:
             pose_processor = PoseProcessor(result.pose_landmarks[0])
             keypoints = pose_processor.get_keypoints()
@@ -29,10 +56,14 @@ def main():
             #                                                 filtered_keypoints[1], 
             #                                                 filtered_keypoints[2])
             #     display_ui.display_angle(img, angle)
-
-        display_ui.show(img)
+        posture_tracker.display_ui.show(img)
+        #cv2.imshow(posture_tracker.display_ui.window_name, posture_tracker.get_img()[0])
+        #print("Frame displayed")
 
         if cv2.waitKey(1) & 0xFF == ord('q'):
+            posture_tracker.close()
+            if frame_reader_thread.is_alive():
+                frame_reader_thread.join()
             break
 
 
