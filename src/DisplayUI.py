@@ -22,11 +22,11 @@ class DisplayUI:
                     1, (255, 0, 0), 2)
     
     def draw_landmarks(self, img, landmarks):
-        pose_connection_style = drawing_utils.DrawingSpec(color=(0, 255, 0), thickness=2)
+        pose_connection_style = drawing_utils.DrawingSpec(color=(0, 255, 0), thickness=7, circle_radius=5)
         drawing_utils.draw_landmarks(
             img,
             landmarks,
-            vision.PoseLandmarker.POSE_CONNECTIONS,
+            vision.PoseLandmarkersConnections.POSE_CONNECTIONS,
             landmark_drawing_spec=drawing_styles.get_default_pose_landmarks_style(),
             connection_drawing_spec=pose_connection_style
         )

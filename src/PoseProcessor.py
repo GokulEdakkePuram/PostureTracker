@@ -5,8 +5,9 @@ class PoseProcessor:
         self.pose = pose
 
     def get_keypoints(self):
-        keypoints = self.pose
-        return np.array(keypoints).reshape(-1, 3)
+        keypoints = np.array([[lm.x, lm.y, lm.z] for lm in self.pose])
+        #return np.array(keypoints).reshape(-1, 3)
+        return keypoints
 
     def get_confidence_scores(self):
         keypoints = self.get_keypoints()

@@ -51,11 +51,11 @@ def main():
             filtered_keypoints = keypoints  # For simplicity, using all keypoints without filtering
 
             # Example: Calculate angle between three joints (e.g., shoulder, elbow, wrist)
-            # if len(filtered_keypoints) >= 3:
-            #     angle = pose_processor.angle_between_joints(filtered_keypoints[0], 
-            #                                                 filtered_keypoints[1], 
-            #                                                 filtered_keypoints[2])
-            #     display_ui.display_angle(img, angle)
+            if len(filtered_keypoints) >= 3:
+                angle = pose_processor.angle_between_joints(filtered_keypoints[0], 
+                                                            filtered_keypoints[1], 
+                                                            filtered_keypoints[2])
+                posture_tracker.display_ui.display_angle(img, angle)
         posture_tracker.display_ui.show(img)
         #cv2.imshow(posture_tracker.display_ui.window_name, posture_tracker.get_img()[0])
         #print("Frame displayed")
