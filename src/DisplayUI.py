@@ -17,8 +17,8 @@ class DisplayUI:
     def close(self):
         cv2.destroyAllWindows()
         
-    def display_angle(self, img, angle, position=(50, 50)):
-        cv2.putText(img, f'Angle: {angle:.2f}', position, cv2.FONT_HERSHEY_SIMPLEX,
+    def display_angle(self, img, joint_name, angle, position=(50, 50)):
+        cv2.putText(img, f'{joint_name}: {angle:.2f}', position, cv2.FONT_HERSHEY_SIMPLEX,
                     1, (255, 0, 0), 2)
     
     def draw_landmarks(self, img, landmarks):

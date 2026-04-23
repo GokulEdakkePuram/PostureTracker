@@ -6,6 +6,7 @@ import threading
 from src.PoseDetector import PoseDetector
 from src.PoseProcessor import PoseProcessor
 from src.DisplayUI import DisplayUI
+from src.constants import POSE_LANDMARK_INDEXES
 
 class PostureTracker:
     def __init__(self):
@@ -51,11 +52,28 @@ def main():
             filtered_keypoints = keypoints  # For simplicity, using all keypoints without filtering
 
             # Example: Calculate angle between three joints (e.g., shoulder, elbow, wrist)
-            if len(filtered_keypoints) >= 3:
-                angle = pose_processor.angle_between_joints(filtered_keypoints[0], 
-                                                            filtered_keypoints[1], 
-                                                            filtered_keypoints[2])
-                posture_tracker.display_ui.display_angle(img, angle)
+            #joints_of_interest = ["left shoulder", "left elbow", "left wrist", "right shoulder", "right elbow", "right wrist"]
+            angles = {
+                "left shoulder": pose_processor.angle_between_joints(
+                    keypoints[POSE_LANDMARK_INDEXES["right shoulder"]], keypoints[POSE_LANDMARK_INDEXES["left shoulder"]], keypoints[POSE_LANDMARK_INDEXES["left elbow"]]
+                ),
+                "right shoulder": pose_processor.angle_between_joints(
+                    keypoints[POSE_LANDMARK_INDEXES["left shoulder"]], keypoints[POSE_LANDMARK_INDEXES["right shoulder"]], keypoints[POSE_LANDMARK_INDEXES["right elbow"]]
+                ),
+                "left elbow": pose_processor.angle_between_joints(
+                    keypoints[POSE_LANDMARK_INDEXES["left shoulder"]], keypoints[POSE_LANDMARK_INDEXES["left elbow"]], keypoints[POSE_LANDMARK_INDEXES["left wrist"]]
+                ),
+                "right elbow": pose_processor.angle_between_joints(
+                    keypoints[POSE_LANDMARK_INDEXES["right shoulder"]], keypoints[POSE_LANDMARK_INDEXES["right elbow"]], keypoints[POSE_LANDMARK_INDEXES["right wrist"]]
+                )
+            }
+            # if len(filtered_keypoints) >= 3:
+            #     angle = pose_processor.angle_between_joints(filtered_keypoints[0], 
+            #                                                 filtered_keypoints[1], 
+            #                                                 filtered_keypoints[2])
+            for joint_name, angle in angles.items():
+                posture_tracker.display_ui.display_angle(img, joint_name, angle, position=(50, 50 + 30 * list(angles.keys()).index(joint_name)))
+            # posture_tracker.display_ui.display_angle(img, angle)
         posture_tracker.display_ui.show(img)
         #cv2.imshow(posture_tracker.display_ui.window_name, posture_tracker.get_img()[0])
         #print("Frame displayed")
