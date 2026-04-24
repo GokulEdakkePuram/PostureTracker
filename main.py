@@ -54,7 +54,7 @@ def main():
             print("Waiting for frames...")
             continue
         img, result = posture_tracker.pose_detector.findPose(
-            img, timestamp_ms, draw=True
+            img, timestamp_ms=int(time.time() * 1000), draw=True
         )
         if result.pose_landmarks:
             pose_processor = PoseProcessor(result.pose_landmarks[0])
