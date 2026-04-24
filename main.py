@@ -54,16 +54,16 @@ def main():
             # Example: Calculate angle between three joints (e.g., shoulder, elbow, wrist)
             #joints_of_interest = ["left shoulder", "left elbow", "left wrist", "right shoulder", "right elbow", "right wrist"]
             angles = {
-                "left shoulder": pose_processor.angle_between_joints(
+                "left shoulder": pose_processor.calculate_angle(
                     keypoints[POSE_LANDMARK_INDEXES["right shoulder"]], keypoints[POSE_LANDMARK_INDEXES["left shoulder"]], keypoints[POSE_LANDMARK_INDEXES["left elbow"]]
                 ),
-                "right shoulder": pose_processor.angle_between_joints(
+                "right shoulder": pose_processor.calculate_angle(
                     keypoints[POSE_LANDMARK_INDEXES["left shoulder"]], keypoints[POSE_LANDMARK_INDEXES["right shoulder"]], keypoints[POSE_LANDMARK_INDEXES["right elbow"]]
                 ),
-                "left elbow": pose_processor.angle_between_joints(
+                "left elbow": pose_processor.calculate_angle(
                     keypoints[POSE_LANDMARK_INDEXES["left shoulder"]], keypoints[POSE_LANDMARK_INDEXES["left elbow"]], keypoints[POSE_LANDMARK_INDEXES["left wrist"]]
                 ),
-                "right elbow": pose_processor.angle_between_joints(
+                "right elbow": pose_processor.calculate_angle(
                     keypoints[POSE_LANDMARK_INDEXES["right shoulder"]], keypoints[POSE_LANDMARK_INDEXES["right elbow"]], keypoints[POSE_LANDMARK_INDEXES["right wrist"]]
                 )
             }
