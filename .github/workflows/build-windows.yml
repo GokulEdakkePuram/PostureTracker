@@ -1,0 +1,43 @@
+name: Build Windows Executable
+
+on:
+  push:
+    tags: ['v*']        # builds when you push a tag like v1.0
+  workflow_dispatch:     # adds a manual "Run workflow" button
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Install uv
+        uses: astral-sh/setup-uv@v3
+        with:
+          enable-cache: true
+
+      - name: Set up Python
+        run: uv python install 3.11
+
+      - name: Install dependencies
+        run: uv sync --dev
+
+      - name: Build executable
+        run: |
+          uv run pyinstaller --onedir --name PoseDetection `
+            --add-data "model/pose_landmarker_full.task;model" `
+            --collect-all mediapipe `
+            --noconsole `
+            main.py
+
+      - name: Zip the output
+        run: Compress-Archive -Path dist/PoseDetection/* -DestinationPath PoseDetection-windows.zip
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: PoseDetection-windows
+          path: PoseDetection-windows.zip
+          retention-days: 30

@@ -9,3 +9,8 @@ dependencies = [
     "opencv-python>=4.13.0.92",
     "ruff>=0.15.11",
 ]
+
+[dependency-groups]
+dev = [
+    "pyinstaller>=6.20.0",
+]

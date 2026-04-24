@@ -12,7 +12,7 @@ class PoseDetector:
         smooth=True,
         detectionCon=0.5,
         trackCon=0.5,
-        model_path="/Users/gokulmnambiar/Desktop/GitHubRepos/PostureTracker/model/pose_landmarker_full.task",
+        model_path="model/pose_landmarker_full.task",
     ):
         self.model_path = model_path
         self._timestamp_ms = 0
