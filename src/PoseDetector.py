@@ -3,9 +3,17 @@ import cv2
 from mediapipe.tasks import python
 from mediapipe.tasks.python import vision
 
+
 class PoseDetector:
-    def __init__(self, mode=False, upBody=False, smooth=True, detectionCon=0.5, trackCon=0.5, model_path="/Users/gokulmnambiar/Desktop/GitHubRepos/PostureTracker/model/pose_landmarker_full.task"):
-        
+    def __init__(
+        self,
+        mode=False,
+        upBody=False,
+        smooth=True,
+        detectionCon=0.5,
+        trackCon=0.5,
+        model_path="/Users/gokulmnambiar/Desktop/GitHubRepos/PostureTracker/model/pose_landmarker_full.task",
+    ):
         self.model_path = model_path
         self._timestamp_ms = 0
 
@@ -14,7 +22,6 @@ class PoseDetector:
             running_mode=vision.RunningMode.VIDEO,
         )
         self.landmarker = vision.PoseLandmarker.create_from_options(options)
-        
 
     def findPose(self, img, timestamp_ms, draw=True):
         imgRGB = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
@@ -37,8 +44,13 @@ class PoseDetector:
                 start_idx, end_idx = connection.start, connection.end
                 start_lm = landmarks[start_idx]
                 end_lm = landmarks[end_idx]
-                cv2.line(img, (int(start_lm.x * w), int(start_lm.y * h)), 
-                         (int(end_lm.x * w), int(end_lm.y * h)), (0, 255, 0), 2)
+                cv2.line(
+                    img,
+                    (int(start_lm.x * w), int(start_lm.y * h)),
+                    (int(end_lm.x * w), int(end_lm.y * h)),
+                    (0, 255, 0),
+                    2,
+                )
 
     def close(self):
         self.landmarker.close()

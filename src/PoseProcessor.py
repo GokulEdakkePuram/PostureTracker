@@ -1,13 +1,14 @@
 import numpy as np
 import math
 
+
 class PoseProcessor:
     def __init__(self, pose):
         self.pose = pose
 
     def get_keypoints(self):
         keypoints = np.array([[lm.x, lm.y, lm.z] for lm in self.pose])
-        #return np.array(keypoints).reshape(-1, 3)
+        # return np.array(keypoints).reshape(-1, 3)
         return keypoints
 
     def get_confidence_scores(self):
@@ -19,7 +20,7 @@ class PoseProcessor:
         confidence_scores = self.get_confidence_scores()
         filtered_keypoints = keypoints[confidence_scores >= threshold]
         return filtered_keypoints
-    
+
     # def angle_between_joints(self, joint1, joint2, joint3):
     #     # Calculate the angle between three joints
     #     a = np.array(joint1[:2])  # First joint
@@ -32,7 +33,7 @@ class PoseProcessor:
     #     cosine_angle = np.dot(ba, bc) / (np.linalg.norm(ba) * np.linalg.norm(bc))
     #     angle = np.arccos(cosine_angle)
     #     return np.degrees(angle)
-    
+
     @staticmethod
     def calculate_angle(point1, point2, point3):
         """Calculate angle at point2 formed by point1-point2-point3"""

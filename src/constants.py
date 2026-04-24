@@ -31,5 +31,5 @@ POSE_LANDMARK_INDEXES = {
     "left heel": 29,
     "right heel": 30,
     "left foot index": 31,
-    "right foot index": 32
+    "right foot index": 32,
 }
